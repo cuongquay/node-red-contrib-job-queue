@@ -6,27 +6,45 @@ The message is passed in as a JavaScript object called msg.
 
 By convention it will have a msg.payload property containing the body of the message.
 
-Queued job management:
+**Queued job management:**
+
 When writting a queued execution code, these funcions are available:
 
+```javascript
 job.progress(50)
 done()
 done(Error('error transcoding'))
 done(null, { message: "Passing result..." })
-Circuit breaker support:
+```
+
+**Circuit breaker support:**
+
 Inside the function context, Hystrix-like circuit-breaker-js is supported as CirCuitBreaker object:
 
-var breaker = new CircuitBreaker(); var command = function(success, failed) { doSomething().done(success).fail(failed); }; var fallback = function() { alert("Service is down"); }; breaker.run(command, fallback);
-Logging and Error Handling
+```javascript
+var breaker = new CircuitBreaker(); 
+var command = function(success, failed) { doSomething().done(success).fail(failed); }; 
+var fallback = function() { alert("Service is down"); }; 
+breaker.run(command, fallback);
+```
+
+**Logging and Error Handling**
+
 To log any information, or report an error, the following functions are available:
 
+```javascript
 node.log("Log")
 node.warn("Warning")
 node.error("Error")
+```
+
 The Catch node can also be used to handle errors. To invoke a Catch node, pass msg as a second argument to node.error:
 
+```javascript
 node.error("Error",msg)
-Sending messages
+```
+
+**Sending messages**
 
 The function can either return the messages it wants to pass on to the next nodes in the flow, or can call node.send(messages).
 
