@@ -8,7 +8,7 @@
 		"bull" : ">=1.0.0-rc3",
 		"q": ">=1.4.1"
 	},
-	"license": "Apache-2.0",
+	"license": "MIT-2.0",
 	"keywords": ["node-red", "jobs", "queue"],
 	"node-red": {
 		"nodes": {
