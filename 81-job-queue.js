@@ -19,6 +19,8 @@ module.exports = function(RED) {
 	var q = require('q');
 	var util = require("util");
 	var vm = require("vm");
+	var child_process = require('child_process');
+	var request = require('request');
 	var Queue = require("bull");
 	var CircuitBreaker = require("circuit-breaker-js");
 
@@ -203,6 +205,8 @@ module.exports = function(RED) {
 						context.msg = job.data;
 						context.job = job;
 						context.done = done;
+						context.request = request;
+						context.child_process = child_process;
 						context.CircuitBreaker = CircuitBreaker;
 						node.script.runInContext(context);
 						sendResults(node, node.name, context.results);
