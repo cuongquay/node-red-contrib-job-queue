@@ -1,0 +1,26 @@
+{
+	"name": "node-red-contrib-jobs-queue",
+	"version": "0.1.0",
+	"description": "A bull jobs queue nodes for Node-RED",
+	"dependencies": {
+		"is-utf8": ">=0.2.1",		
+		"circuit-breaker-js": ">=0.0.1",
+		"bull" : ">=1.0.0-rc3",
+		"q": ">=1.4.1"
+	},
+	"license": "Apache-2.0",
+	"keywords": ["node-red", "jobs", "queue"],
+	"node-red": {
+		"nodes": {
+			"selenium-webdriver": "jobs-queue.js"
+		}
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/cuongquay/node-red-contrib-jobs-queue"
+	},
+	"author": {
+		"name": "DUONG Dinh Cuong",
+		"email": "cuong3ihut@gmail.com"
+	}
+}
