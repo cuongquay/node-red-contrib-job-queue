@@ -71,7 +71,9 @@ module.exports = function(RED) {
 				this.on('disconnected', function() {
 					closecomplete();
 				});
-				delete node.queue;
+				node.queue.close().then(function() {
+					node.log(RED._('closed'));
+				});
 			} else {
 				closecomplete();
 			}
@@ -106,11 +108,12 @@ module.exports = function(RED) {
 		}
 	};
 
-	function QueueInNode(n) {
+	function QueueCmdNode(n) {
 		RED.nodes.createNode(this, n);
 		var node = this;
 		this.name = n.name;
 		this.queue = n.queue;
+		this.cmd = n.cmd;
 		this.Queue = RED.nodes.getNode(this.queue);
 		this.topic = n.topic;
 		if (node.Queue) {
@@ -134,11 +137,26 @@ module.exports = function(RED) {
 		try {
 			this.on("input", function(msg) {
 				node.Queue.connect().then(function(queue) {
-					node.log(RED._("queue.add()", queue));
-					queue.add(msg, {
-						name : node.name,
-						topic : node.topic
-					});
+					switch (parseInt(node.cmd)) {
+					case 0:
+						node.log(RED._("queue.add()", node.cmd));
+						queue.add(msg, {
+							name : node.name,
+							topic : node.topic
+						});
+						break;
+					case 1:
+						node.log(RED._("queue.pause()", node.cmd));
+						queue.pause();
+						break;
+					case 2:
+						node.log(RED._("queue.resume()", node.cmd));
+						queue.resume();
+						break;
+					default:
+						node.log(RED._("queue.default()", node.cmd));
+						break;
+					}
 				}, function(error) {
 					node.status({
 						fill : "red",
@@ -153,8 +171,8 @@ module.exports = function(RED) {
 			this.error(err);
 		}
 	}
-	
-	function QueueOutNode(n) {
+
+	function QueueRunNode(n) {
 		RED.nodes.createNode(this, n);
 		var node = this;
 		this.name = n.name;
@@ -262,7 +280,8 @@ module.exports = function(RED) {
 		}
 	}
 
-	RED.nodes.registerType("job-queue in", QueueInNode);
-	RED.nodes.registerType("job-queue out", QueueOutNode);
+
+	RED.nodes.registerType("queue cmd", QueueCmdNode);
+	RED.nodes.registerType("queue run", QueueRunNode);
 	RED.library.register("functions");
 };
