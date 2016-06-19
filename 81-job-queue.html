@@ -21,15 +21,15 @@ limitations under the License.
 	<div id="node-config-queue-server-tabs-content" style="min-height: 170px;">
 		<div id="queue-server-tab-connection" style="display:none">
 			<div class="form-row node-input-name">
-				<label for="node-config-input-name"><i class="fa fa-globe"></i> <span>Name</span></label>
+				<label for="node-config-input-name"><i class="fa fa-globe"></i> <span>Queue Name</span></label>
 					<input class="input-append-left" type="text" id="node-config-input-name" placeholder="Enter a queue name" style="width: 40%;" >
 			</div>
 			<div class="form-row node-input-address">
-				<label for="node-config-input-address"><i class="fa fa-link"></i> <span>Address</span></label>
+				<label for="node-config-input-address"><i class="fa fa-link"></i> <span>Redis Server</span></label>
 					<input class="input-append-left" type="text" id="node-config-input-address" placeholder="localhost" style="width: 40%;" >
 			</div>
 			<div class="form-row node-input-port">
-				<label for="node-config-input-port"><i class="fa fa-edit"></i> <span>Port</span></label>
+				<label for="node-config-input-port"><i class="fa fa-edit"></i> <span>Redis Port</span></label>
 				<input type="number" id="node-config-input-port" placeholder="6379" style="width: 40%;">
 			</div>
 		</div>
@@ -278,7 +278,7 @@ limitations under the License.
 </script>
 
 <script type="text/x-red" data-help-name="job-queue in">
-	<p>A queue in node to execute a queue in the background as a queued job which is used OptimalBits/bull library as the core of job management.</p>
+	<p>A command node to execute a queue in the background as a queued job which is used OptimalBits/bull library as the core of job management.</p>
 	<p>The message is passed in as a JavaScript object called <code>msg</code>.</p>
 	<p>By convention it will have a <code>msg.payload</code> property containing the body of the message which is passed to the queue job.</p>
 </script>
