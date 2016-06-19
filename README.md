@@ -8,7 +8,7 @@ A pair of queue nodes where you can write code to run in the background as a que
 
 The message is passed in as a JavaScript object called msg.job and msg.done object to the job function.
 
-By convention it will have a msg.payload property containing the job data of the queue function.
+By convention it will have a whole msg property containing the job data of the queue function.
 
 **Queued job management:**
 
