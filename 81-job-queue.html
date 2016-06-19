@@ -101,11 +101,35 @@ limitations under the License.
 </script>
 
 <script type="text/x-red" data-help-name="job-queue">
-	<p>A function block where you can write code to do more interesting things.</p>
+	<p>A function block where you can write code to run in the background as a queued job which is used OptimalBits/bull library as the core of job management.</p>
 	<p>The message is passed in as a JavaScript object called <code>msg</code>.</p>
 	<p>By convention it will have a <code>msg.payload</code> property containing
 	the body of the message.</p>
-	<h4>Logging and Error Handling</h4>
+	<strong>Queued job management:</strong>
+	<p>When writting a queued execution code, these funcions are available:</p>
+	<ul>
+	<li><code>job.progress(50)</code></li>
+	<li><code>done()</code></li>
+	<li><code>done(Error('error transcoding'))</code></li>
+	<li><code>done(null, { message: "Passing result..." })</code></li>
+	</ul>
+	</p>
+	<strong>Circuit breaker support:</strong>
+	<p>Inside the function context, Hystrix-like circuit-breaker-js is supported as CirCuitBreaker object:</p>
+	<ul>
+	<li><code>var breaker = new CircuitBreaker();
+		var command = function(success, failed) {
+		  doSomething().done(success).fail(failed);
+		};
+		var fallback = function() {
+		  alert("Service is down");
+		};
+		breaker.run(command, fallback);
+		</code>
+	</li>
+	</ul>
+	</p>
+	<strong>Logging and Error Handling</strong>
 	<p>To log any information, or report an error, the following functions are available:</p>
 	<ul>
 	<li><code>node.log("Log")</code></li>
@@ -162,7 +186,7 @@ limitations under the License.
 		outputs : 1,
 		icon : "debug.png",
 		label : function() {
-			return this.name;
+			return this.name || "job queue";
 		},
 		oneditprepare : function() {
 			var that = this;
