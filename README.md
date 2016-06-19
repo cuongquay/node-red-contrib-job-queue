@@ -6,7 +6,7 @@ A pair of queue nodes where you can write code to run in the background as a que
 
 **Queue Out:** run a job by name as a background nodejs function which is managed through a redis server. 
 
-Full example job function code with Circuit Breaker protection:
+Full example job function code:
 
 ```javascript
 
@@ -18,35 +18,14 @@ console.log(job.opts);
 // transcode image asynchronously and report progress
 job.progress(42);
 
-var breaker = new CircuitBreaker({
-  timeoutDuration: 1000,
-  volumeThreshold: 1,
-  errorThreshold: 50
-});
-
-breaker.onCircuitOpen = function(metrics) {
-  console.warn('Circuit open', metrics);
-};
-
-breaker.onCircuitClose = function(metrics) {
-  console.warn('Circuit close', metrics);
-};
-
-var command = function(success, failed) {
-    // defer the execution of anonymous function for 
-    // 30 seconds and go to next line of code.
-    setTimeout(function(){ 
-        // call done when finished
-        done(null, {
-            "Hello": "CuongQuay"
-        });
-        success();
-    }, 30000);  
-};
-
-breaker.run(command, function() {
-  alert("Service is down");
-});
+// defer the execution of anonymous function for 
+// 30 seconds and go to next line of code.
+setTimeout(function(){ 
+    // call done when finished
+	done(null, {
+        "Hello": "CuongQuay"
+    });
+}, 30000);  
 
 return msg;
 ```

@@ -22,7 +22,6 @@ module.exports = function(RED) {
 	var child_process = require('child_process');
 	var request = require('request');
 	var Queue = require("bull");
-	var CircuitBreaker = require("circuit-breaker-js");
 
 	function QueueServerSetup(n) {
 		RED.nodes.createNode(this, n);
@@ -178,9 +177,10 @@ module.exports = function(RED) {
 		this.name = n.name;
 		this.func = n.func;
 		this.queue = n.queue;
+		this.topic = n.topic;
+		this.timeout = n.timeout;
 		this.Queue = RED.nodes.getNode(this.queue);
 		var functionText = "var results = null;" + "results = (function(msg){ " + "var __msgid__ = msg._msgid;" + "var node = {" + "log:__node__.log," + "error:__node__.error," + "warn:__node__.warn," + "on:__node__.on," + "status:__node__.status," + "send:function(msgs){ __node__.send(__msgid__,msgs);}" + "};\n" + this.func + "\n" + "})(msg);";
-		this.topic = n.topic;
 		var sandbox = {
 			console : console,
 			util : util,
@@ -225,10 +225,8 @@ module.exports = function(RED) {
 						context.done = done;
 						context.request = request;
 						context.child_process = child_process;
-						context.CircuitBreaker = CircuitBreaker;
 						node.script.runInContext(context);
 						sendResults(node, node.name, context.results);
-
 						var duration = process.hrtime(start);
 						var converted = Math.floor((duration[0] * 1e9 + duration[1]) / 10000) / 100;
 						node.metric("duration", node.name, converted);

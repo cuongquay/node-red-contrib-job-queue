@@ -127,21 +127,6 @@ limitations under the License.
 	<li><code>done(null, { message: "Passing result..." })</code></li>
 	</ul>
 	</p>
-	<strong>Circuit breaker support:</strong>
-	<p>Inside the function context, Hystrix-like circuit-breaker-js is supported as CirCuitBreaker object:</p>
-	<ul>
-	<li><code>var breaker = new CircuitBreaker();
-		var command = function(success, failed) {
-		  doSomething().done(success).fail(failed);
-		};
-		var fallback = function() {
-		  alert("Service is down");
-		};
-		breaker.run(command, fallback);
-		</code>
-	</li>
-	</ul>
-	</p>
 	<strong>Logging and Error Handling</strong>
 	<p>To log any information, or report an error, the following functions are available:</p>
 	<ul>
