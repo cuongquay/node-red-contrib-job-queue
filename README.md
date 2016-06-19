@@ -6,6 +6,51 @@ A pair of queue nodes where you can write code to run in the background as a que
 
 **Queue Out:** run a job by name as a background nodejs function which is managed through a redis server. 
 
+Full example job function code using Circuit Breaker
+
+```javascript
+
+// Print out the passed parameter
+console.log(job.data);
+// Print out the passed node info
+console.log(job.opts);
+
+// transcode image asynchronously and report progress
+job.progress(42);
+
+var breaker = new CircuitBreaker({
+  timeoutDuration: 1000,
+  volumeThreshold: 1,
+  errorThreshold: 50
+});
+
+breaker.onCircuitOpen = function(metrics) {
+  console.warn('Circuit open', metrics);
+};
+
+breaker.onCircuitClose = function(metrics) {
+  console.warn('Circuit close', metrics);
+};
+
+var command = function(success, failed) {
+    // defer the execution of anonymous function for 
+    // 30 seconds and go to next line of code.
+    setTimeout(function(){ 
+        // call done when finished
+        done(null, {
+            "Hello": "CuongQuay"
+        });
+        success();
+    }, 30000);  
+};
+
+breaker.run(command, function() {
+  alert("Service is down");
+});
+
+return msg;
+```
+
 The message is passed in as a JavaScript object called msg.job and msg.done object to the job function.
 
 By convention it will pass a whole msg object to the job.data as the parameter of the queue function.
