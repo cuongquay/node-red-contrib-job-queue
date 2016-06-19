@@ -6,7 +6,7 @@ A pair of queue nodes where you can write code to run in the background as a que
 
 **Queue Out:** run a job by name as a background nodejs function which is managed through a redis server. 
 
-Full example job function code using Circuit Breaker
+Full example job function code with Circuit Breaker protection:
 
 ```javascript
 
