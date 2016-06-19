@@ -30,7 +30,17 @@ limitations under the License.
 			</div>
 			<div class="form-row node-input-port">
 				<label for="node-config-input-port"><i class="fa fa-edit"></i> <span>Port</span></label>
-				<input type="number" id="node-config-input-port" placeholder="6379">
+				<input type="number" id="node-config-input-port" placeholder="6379" style="width: 40%;">
+			</div>
+		</div>
+		<div id="queue-server-tab-about" style="display:none">
+			<div class="form-row node-label-author">
+				<label><i class="fa fa-user"></i> <span>Author</span></label>
+				<span class="input-append-left"  style="width: 40%;" >Duong Dinh Cuong</span>
+			</div>
+			<div class="form-row node-label-email">
+				<label><i class="fa fa-email"></i> <span>Email</span></label>
+				<span class="input-append-left"  style="width: 40%;" >cuong3ihut@gmail.com</span>
 			</div>
 		</div>
 	</div>
@@ -67,7 +77,11 @@ limitations under the License.
 			});
 			tabs.addTab({
 				id : "queue-server-tab-connection",
-				label : this._("mqtt.tabs-label.connection")
+				label : "Queue"
+			});
+			tabs.addTab({
+				id : "queue-server-tab-about",
+				label : "About"
 			});
 			setTimeout(function() {
 				tabs.resize();
@@ -183,6 +197,7 @@ limitations under the License.
 			}
 		},
 		outputs : 1,
+		align: "right",
 		icon : "debug.png",
 		label : function() {
 			return this.name || "queue out";
@@ -263,9 +278,9 @@ limitations under the License.
 </script>
 
 <script type="text/x-red" data-help-name="job-queue in">
-	<p>A function block where you can write code to run in the background as a queued job which is used OptimalBits/bull library as the core of job management.</p>
+	<p>A queue in node to execute a queue in the background as a queued job which is used OptimalBits/bull library as the core of job management.</p>
 	<p>The message is passed in as a JavaScript object called <code>msg</code>.</p>
-	<p>By convention it will have a <code>msg.payload</code> property containing the body of the message.</p>
+	<p>By convention it will have a <code>msg.payload</code> property containing the body of the message which is passed to the queue job.</p>
 </script>
 
 <script type="text/javascript">
