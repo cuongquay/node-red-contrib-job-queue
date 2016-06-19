@@ -10,24 +10,19 @@ Full example job function code:
 
 ```javascript
 
-// Print out the passed parameter
-console.log(job.data);
-// Print out the passed node info
-console.log(job.opts);
-
 // transcode image asynchronously and report progress
 job.progress(42);
+console.log("Running.....", job.data, job.opts);
 
-// defer the execution of anonymous function for 
-// 30 seconds and go to next line of code.
 setTimeout(function(){ 
     // call done when finished
-	done(null, {
+    done(null, {
         "Hello": "CuongQuay"
     });
-}, 30000);  
+}, 5000); 
 
 return msg;
+
 ```
 
 The message is passed in as a JavaScript object called msg.job and msg.done object to the job function.
@@ -43,17 +38,6 @@ job.progress(50)
 done()
 done(Error('error transcoding'))
 done(null, { message: "Passing result..." })
-```
-
-**Circuit breaker support:**
-
-Inside the function context, Hystrix-like circuit-breaker-js is supported as CirCuitBreaker object:
-
-```javascript
-var breaker = new CircuitBreaker(); 
-var command = function(success, failed) { doSomething().done(success).fail(failed); }; 
-var fallback = function() { alert("Service is down"); }; 
-breaker.run(command, fallback);
 ```
 
 **Logging and Error Handling**
