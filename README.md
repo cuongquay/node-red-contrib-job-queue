@@ -2,12 +2,13 @@
 
 A pair of queue nodes where you can write code to run in the background as a queued job which is used OptimalBits/bull library as the core of job management.
 
-**Queue In:** start a job by name with msg.payload as the job.data of the queue job
+**Queue In:** start a job by name with msg.payload as the job.data of the queue job.
+
 **Queue Out:** run a job by name as a background nodejs function which is managed through a redis server. 
 
-The message is passed in as a JavaScript object called msg.
+The message is passed in as a JavaScript object called msg.job and msg.done object to the job function.
 
-By convention it will have a msg.payload property containing the body of the message.
+By convention it will have a msg.payload property containing the job data of the queue function.
 
 **Queued job management:**
 
