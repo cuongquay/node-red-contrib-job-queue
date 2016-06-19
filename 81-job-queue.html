@@ -76,7 +76,7 @@ limitations under the License.
 	}); 
 </script>
 
-<script type="text/x-red" data-template-name="job-queue">
+<script type="text/x-red" data-template-name="job-queue out">
 	<div class="form-row">
 	<label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
 	<input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
@@ -100,7 +100,7 @@ limitations under the License.
 	<div class="form-tips"><span data-i18n="function.tip"></span></div>
 </script>
 
-<script type="text/x-red" data-help-name="job-queue">
+<script type="text/x-red" data-help-name="job-queue out">
 	<p>A function block where you can write code to run in the background as a queued job which is used OptimalBits/bull library as the core of job management.</p>
 	<p>The message is passed in as a JavaScript object called <code>msg</code>.</p>
 	<p>By convention it will have a <code>msg.payload</code> property containing
@@ -157,7 +157,7 @@ limitations under the License.
 </script>
 
 <script type="text/javascript">
-	RED.nodes.registerType('job-queue', {
+	RED.nodes.registerType('job-queue out', {
 		color : "#A6BBCF",
 		category : 'function',
 		defaults : {
@@ -182,11 +182,10 @@ limitations under the License.
 				required : true
 			}
 		},
-		inputs : 1,
 		outputs : 1,
 		icon : "debug.png",
 		label : function() {
-			return this.name || "job queue";
+			return this.name || "queue out";
 		},
 		oneditprepare : function() {
 			var that = this;
@@ -248,6 +247,44 @@ limitations under the License.
 			}
 			$("#node-input-func").val(this.editor.getValue());
 			delete this.editor;
+		}
+	}); 
+</script>
+
+<script type="text/x-red" data-template-name="job-queue in">
+	<div class="form-row">
+	<label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+	<input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+	</div>
+	<div class="form-row">
+	<label for="node-input-queue"><i class="fa fa-globe"></i> <span>Queue</span></label>
+	<input type="text" id="node-input-queue">
+	</div>
+</script>
+
+<script type="text/x-red" data-help-name="job-queue in">
+	<p>A function block where you can write code to run in the background as a queued job which is used OptimalBits/bull library as the core of job management.</p>
+	<p>The message is passed in as a JavaScript object called <code>msg</code>.</p>
+	<p>By convention it will have a <code>msg.payload</code> property containing the body of the message.</p>
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType('job-queue in', {
+		color : "#A6BBCF",
+		category : 'function',
+		defaults : {
+			name : {
+				value : ""
+			},
+			queue : {
+				type : "queue-server",
+				required : true
+			}
+		},
+		inputs : 1,
+		icon : "debug.png",
+		label : function() {
+			return this.name || "queue in";
 		}
 	}); 
 </script>

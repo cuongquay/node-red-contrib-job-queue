@@ -104,14 +104,12 @@ module.exports = function(RED) {
 		}
 	};
 
-	function FunctionNode(n) {
+	function QueueInNode(n) {
 		RED.nodes.createNode(this, n);
 		var node = this;
 		this.name = n.name;
-		this.func = n.func;
 		this.queue = n.queue;
 		this.Queue = RED.nodes.getNode(this.queue);
-		var functionText = "var results = null;" + "results = (function(msg){ " + "var __msgid__ = msg._msgid;" + "var node = {" + "log:__node__.log," + "error:__node__.error," + "warn:__node__.warn," + "on:__node__.on," + "status:__node__.status," + "send:function(msgs){ __node__.send(__msgid__,msgs);}" + "};\n" + this.func + "\n" + "})(msg);";
 		this.topic = n.topic;
 		if (node.Queue) {
 			node.Queue.register();
@@ -131,6 +129,38 @@ module.exports = function(RED) {
 		} else {
 			node.error(RED._("common.status.error"));
 		}
+		try {
+			this.on("input", function(msg) {
+				node.Queue.connect().then(function(queue) {
+					node.log(RED._("queue.add()", queue));
+					queue.add(msg, {
+						name : node.name,
+						topic : node.topic
+					});
+				}, function(error) {
+					node.status({
+						fill : "red",
+						shape : "ring",
+						text : "disconnected"
+					});
+				});
+			});
+		} catch(err) {
+			// eg SyntaxError - which v8 doesn't include line number information
+			// so we can't do better than this
+			this.error(err);
+		}
+	}
+	
+	function QueueOutNode(n) {
+		RED.nodes.createNode(this, n);
+		var node = this;
+		this.name = n.name;
+		this.func = n.func;
+		this.queue = n.queue;
+		this.Queue = RED.nodes.getNode(this.queue);
+		var functionText = "var results = null;" + "results = (function(msg){ " + "var __msgid__ = msg._msgid;" + "var node = {" + "log:__node__.log," + "error:__node__.error," + "warn:__node__.warn," + "on:__node__.on," + "status:__node__.status," + "send:function(msgs){ __node__.send(__msgid__,msgs);}" + "};\n" + this.func + "\n" + "})(msg);";
+		this.topic = n.topic;
 		var sandbox = {
 			console : console,
 			util : util,
@@ -162,75 +192,73 @@ module.exports = function(RED) {
 			clearTimeout : clearTimeout
 		};
 		var context = vm.createContext(sandbox);
-		try {
-			this.script = vm.createScript(functionText);
-			this.on("input", function(msg) {
-				node.Queue.connect().then(function(queue) {
-					node.log(RED._("input.connect()", queue));
-					queue.process(function(job, done) {
-						node.log(RED._("input.start()", job));
-						try {
-							var start = process.hrtime();
-							context.msg = msg;
-							context.job = job;
-							context.done = done;
-							context.CircuitBreaker = CircuitBreaker;
-							node.script.runInContext(context);
-							sendResults(node, msg._msgid, context.results);
+		if (node.Queue) {
+			node.Queue.register();
+			node.script = vm.createScript(functionText);
+			node.Queue.connect().then(function(queue) {
+				queue.process(function(job, done) {
+					node.log(RED._("queue.run()", job));
+					try {
+						var start = process.hrtime();
+						context.msg = job.data;
+						context.job = job;
+						context.done = done;
+						context.CircuitBreaker = CircuitBreaker;
+						node.script.runInContext(context);
+						sendResults(node, node.name, context.results);
 
-							var duration = process.hrtime(start);
-							var converted = Math.floor((duration[0] * 1e9 + duration[1]) / 10000) / 100;
-							node.metric("duration", msg, converted);
-							if (process.env.NODE_RED_FUNCTION_TIME) {
-								node.status({
-									fill : "yellow",
-									shape : "dot",
-									text : "" + converted
-								});
-							}
-						} catch(err) {
-							var line = 0;
-							var errorMessage;
-							var stack = err.stack.split(/\r?\n/);
-							if (stack.length > 0) {
-								while (line < stack.length && stack[line].indexOf("ReferenceError") !== 0) {
-									line++;
-								}
-								if (line < stack.length) {
-									errorMessage = stack[line];
-									var m = /:(\d+):(\d+)$/.exec(stack[line + 1]);
-									if (m) {
-										var lineno = Number(m[1]) - 1;
-										var cha = m[2];
-										errorMessage += " (line " + lineno + ", col " + cha + ")";
-									}
-								}
-							}
-							if (!errorMessage) {
-								errorMessage = err.toString();
-							}
-							node.error(errorMessage, msg);
+						var duration = process.hrtime(start);
+						var converted = Math.floor((duration[0] * 1e9 + duration[1]) / 10000) / 100;
+						node.metric("duration", node.name, converted);
+						if (process.env.NODE_RED_FUNCTION_TIME) {
+							node.status({
+								fill : "yellow",
+								shape : "dot",
+								text : "" + converted
+							});
 						}
-					});
-					queue.add(msg, {
-						name : node.name,
-						topic : node.topic
-					});
-				}, function(error) {
-					node.status({
-						fill : "red",
-						shape : "ring",
-						text : "disconnected"
-					});
+					} catch(err) {
+						var line = 0;
+						var errorMessage;
+						var stack = err.stack.split(/\r?\n/);
+						if (stack.length > 0) {
+							while (line < stack.length && stack[line].indexOf("ReferenceError") !== 0) {
+								line++;
+							}
+							if (line < stack.length) {
+								errorMessage = stack[line];
+								var m = /:(\d+):(\d+)$/.exec(stack[line + 1]);
+								if (m) {
+									var lineno = Number(m[1]) - 1;
+									var cha = m[2];
+									errorMessage += " (line " + lineno + ", col " + cha + ")";
+								}
+							}
+						}
+						if (!errorMessage) {
+							errorMessage = err.toString();
+						}
+						node.error(errorMessage, node.name);
+					}
+				});
+				node.status({
+					fill : "green",
+					shape : "ring",
+					text : "connected"
+				});
+			}, function(error) {
+				node.status({
+					fill : "red",
+					shape : "ring",
+					text : "disconnected"
 				});
 			});
-		} catch(err) {
-			// eg SyntaxError - which v8 doesn't include line number information
-			// so we can't do better than this
-			this.error(err);
+		} else {
+			node.error(RED._("common.status.error"));
 		}
 	}
 
-	RED.nodes.registerType("job-queue", FunctionNode);
+	RED.nodes.registerType("job-queue in", QueueInNode);
+	RED.nodes.registerType("job-queue out", QueueOutNode);
 	RED.library.register("functions");
 };
