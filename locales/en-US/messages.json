@@ -1,0 +1,27 @@
+{
+	"common": {
+		"label": {
+			"topic": "Topic",
+			"name": "Name",
+			"queue": "Queue",
+			"command": "Command",
+			"function": "Function",
+			"outputs": "Outputs"
+		},
+		"status": {
+			"connected": "connected",
+			"not-connected": "not connected",
+			"disconnected": "disconnected",
+			"connecting": "connecting",
+			"error": "error",
+			"ok": "OK"
+		}
+	},
+	"function": {
+		"label": {
+			"function": "Function",
+			"outputs": "Outputs"
+		},
+		"tip": "See the Info tab for help writing functions."
+	}
+}
