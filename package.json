@@ -8,11 +8,11 @@
 		"bull" : ">=1.0.0-rc3",
 		"q": ">=1.4.1"
 	},
-	"license": "MIT Licence",
+	"license": "MIT",
 	"keywords": ["node-red", "jobs", "queue"],
 	"node-red": {
 		"nodes": {
-			"job-queue": "jobs-queue.js"
+			"job-queue": "81-job-queue.js"
 		}
 	},
 	"repository": {
