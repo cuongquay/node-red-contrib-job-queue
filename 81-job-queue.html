@@ -92,15 +92,15 @@ limitations under the License.
 
 <script type="text/x-red" data-template-name="queue run">
 	<div class="form-row">
-		<label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
-		<input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+		<label for="node-input-name"><i class="fa fa-tag"></i> <span>Name</span></label>
+		<input type="text" id="node-input-name" placeholder="Enter a name">
 	</div>
 	<div class="form-row">
 		<label for="node-input-queue"><i class="fa fa-globe"></i> <span>Queue</span></label>
-		<input type="text" id="node-input-queue">
+		<input type="text" id="node-input-queue" placeholder="Enter queue name">
 	</div>
 	<div class="form-row" style="margin-bottom: 0px;">
-		<label for="node-input-func"><i class="fa fa-wrench"></i> <span data-i18n="function.label.function"></span></label>
+		<label for="node-input-func"><i class="fa fa-wrench"></i> <span>Function</span></label>
 		<input type="hidden" id="node-input-func" autofocus="autofocus">
 		<input type="hidden" id="node-input-noerr">
 	</div>
@@ -108,10 +108,10 @@ limitations under the License.
 		<div style="height: 250px;" class="node-text-editor" id="node-input-func-editor" ></div>
 	</div>
 	<div class="form-row">
-		<label for="node-input-outputs"><i class="fa fa-random"></i> <span data-i18n="function.label.outputs"></span></label>
+		<label for="node-input-outputs"><i class="fa fa-random"></i> <span>Outputs</span></label>
 		<input id="node-input-outputs" style="width: 60px; height: 1.7em;" value="1">
 	</div>
-	<div class="form-tips"><span data-i18n="function.tip"></span></div>
+	<div class="form-tips"><span>See the Info tab for help writing functions.</span></div>
 </script>
 
 <script type="text/x-red" data-help-name="queue run">
@@ -252,19 +252,19 @@ limitations under the License.
 
 <script type="text/x-red" data-template-name="queue cmd">
 	<div class="form-row">
-		<label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name">Name</span></label>
-		<input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+		<label for="node-input-name"><i class="fa fa-tag"></i> <span>Name</span></label>
+		<input type="text" id="node-input-name" placeholder="Enter a name">
 	</div>
 	<div class="form-row">
-        <label for="node-input-topic"><i class="fa fa-tasks"></i> <span data-i18n="common.label.topic">Topic</span></label>
-        <input type="text" id="node-input-topic" data-i18n="[placeholder]common.label.topic">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> <span>Topic</span></label>
+        <input type="text" id="node-input-topic" placeholder="Enter a topic">
     </div>
 	<div class="form-row">
-		<label for="node-input-queue"><i class="fa fa-globe"></i> <span data-i18n="common.label.queue">Queue</span></label>
-		<input type="text" id="node-input-queue">
+		<label for="node-input-queue"><i class="fa fa-globe"></i> <span>Queue</span></label>
+		<input type="text" id="node-input-queue" placeholder="Enter queue name">
 	</div>
 	<div class="form-row">
-        <label for="node-input-cmd"><i class="fa fa-empire"></i> <span data-i18n="common.label.command">Command</span></label>
+        <label for="node-input-cmd"><i class="fa fa-empire"></i> <span>Command</span></label>
         <select id="node-input-cmd" style="width:125px !important">
             <option value="0">Add</option>
             <option value="1">Pause</option>
