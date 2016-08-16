@@ -181,7 +181,7 @@ module.exports = function(RED) {
 		this.timeout = n.timeout;
 		this.Queue = RED.nodes.getNode(this.queue);
 		var functionText = "var results = null;" + "results = (function(msg){ " + "var __msgid__ = msg._msgid;" + "var node = {" + "log:__node__.log," + "error:__node__.error," + "warn:__node__.warn," + "on:__node__.on," + "status:__node__.status," + "send:function(msgs){ __node__.send(__msgid__,msgs);}" + "};\n" + this.func + "\n" + "})(msg);";
-		var sandbox = {
+		var sandbox = {			
 			console : console,
 			util : util,
 			Buffer : Buffer,
@@ -216,13 +216,17 @@ module.exports = function(RED) {
 			node.Queue.register();
 			node.script = vm.createScript(functionText);
 			node.Queue.connect().then(function(queue) {
-				queue.process(function(job, done) {
+				queue.process(function(job, completed) {
 					node.log(RED._("queue.run()", job));
 					try {
 						var start = process.hrtime();
 						context.msg = job.data;
 						context.job = job;
-						context.done = done;
+						context.done = function(error, results) {
+							sendResults(node, node.name, results);
+							error = error || null;
+							completed(error, results);
+						};
 						context.request = request;
 						context.child_process = child_process;
 						node.script.runInContext(context);
