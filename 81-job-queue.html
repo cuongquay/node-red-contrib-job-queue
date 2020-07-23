@@ -32,6 +32,10 @@ limitations under the License.
 				<label for="node-config-input-port"><i class="fa fa-edit"></i> <span>Redis Port</span></label>
 				<input type="number" id="node-config-input-port" placeholder="6379" style="width: 40%;">
 			</div>
+			<div class="form-row node-input-password">
+				<label for="node-config-input-password"><i class="fa fa-lock"></i> <span>Redis Password</span></label>
+				<input type="text" id="node-config-input-password" placeholder="" style="width: 40%;">
+			</div>
 		</div>
 		<div id="queue-server-tab-about" style="display:none">
 			<div class="form-row node-label-author">
@@ -62,6 +66,10 @@ limitations under the License.
 				value : 6379,
 				required : true,
 				validate : RED.validators.number()
+			},
+			password : {
+				value : "",
+				required : false
 			}
 		},
 		label : function() {
