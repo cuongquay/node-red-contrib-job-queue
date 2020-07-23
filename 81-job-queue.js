@@ -33,6 +33,7 @@ module.exports = function(RED) {
 		this.name = n.name;
 		this.address = n.address;
 		this.port = n.port;
+		this.password = n.password;
 
 		var node = this;
 		this.register = function() {
@@ -49,7 +50,14 @@ module.exports = function(RED) {
 			var deferred = q.defer();
 			if (!node.connected && !node.connecting) {
 				node.connecting = true;
-				node.queue = Queue(node.name, node.port, node.address);
+				// node.queue = Queue(node.name, node.port, node.address);
+				node.queue = Queue(node.name, {
+					redis: {
+						port: node.port,
+						host: node.address,
+						password: node.password
+					}
+				}, );
 				node.log(RED._("connected", {
 					server : (node.address ? node.address + "@" : "") + node.port
 				}));
